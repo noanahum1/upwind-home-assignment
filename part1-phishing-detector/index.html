@@ -1,1 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Makes the site responsive on mobile screens -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phishing Email Detector</title>
+  <!-- Link to CSS file for styling -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <!-- Main title -->
+      <h1>Phishing Email Detector</h1>
+      <p class="subtitle">Analyze an email subject and body for phishing indicators</p>
 
+      <!-- Sender email input -->
+      <div class="form-group">
+        <label for="senderEmail">Sender Email Address</label>
+        <input
+          type="email"
+          id="senderEmail"
+          placeholder="Enter the sender email address"
+        />
+      </div>
+
+      <!-- Email subject input -->
+      <div class="form-group">
+        <label for="subject">Email Subject</label>
+        <input
+          type="text"
+          id="subject"
+          placeholder="Enter the email subject"
+        />
+      </div>
+
+      <!-- Email body input -->
+      <div class="form-group">
+        <label for="body">Email Body</label>
+        <textarea
+          id="body"
+          rows="10"
+          placeholder="Paste the email content here"
+        ></textarea>
+      </div>
+
+      <!-- Button that triggers the main JS function -->
+      <button id="analyzeBtn" onclick="analyzeEmail()">Analyze Email</button>
+
+      <!-- Result section (hidden by default, shown after analysis) -->
+      <div id="result" class="result hidden">
+        <h2>Analysis Result</h2>
+        <!-- Final verdict text -->
+        <p id="verdict"></p>
+
+        <div id="indicatorsSection">
+          <h3>Detected Indicators</h3>
+          <!-- List of detected suspicious indicators -->
+          <ul id="indicatorsList"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Link to JavaScript file that contains all detection logic -->
+  <script src="script.js"></script>
+</body>
+</html>
