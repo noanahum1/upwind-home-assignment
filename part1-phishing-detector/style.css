@@ -1,1 +1,155 @@
+/* Reset basic styles for all elements */
+* {
+  box-sizing: border-box; /* Makes width/height include padding and border */
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
 
+/* Center the app on the screen with a gradient background */
+body {
+  background: linear-gradient(135deg, #eaf4ff, #f7f9fc);
+  min-height: 100vh; /* Full screen height */
+  display: flex;
+  justify-content: center; /* Horizontal center */
+  align-items: center; /* Vertical center */
+  padding: 30px;
+}
+
+/* Wrapper that limits width of the app */
+.container {
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Main card UI */
+.card {
+  background-color: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+}
+
+/* Main title styling */
+h1 {
+  font-size: 32px;
+  margin-bottom: 8px;
+  color: #1f2937;
+}
+
+/* Subtitle text under the title */
+.subtitle {
+  color: #6b7280;
+  margin-bottom: 28px;
+  font-size: 16px;
+}
+
+/* Each input section spacing */
+.form-group {
+  margin-bottom: 22px;
+}
+
+/* Label styling */
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #374151;
+}
+
+/* Input and textarea basic styling */
+input,
+textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+/* Highlight input when focused */
+input:focus,
+textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Allow resizing only vertically */
+textarea {
+  resize: vertical;
+}
+
+/* Main button styling */
+button {
+  width: 100%;
+  padding: 14px;
+  background-color: #2563eb;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+/* Button hover effect */
+button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Result box styling */
+.result {
+  margin-top: 28px;
+  padding: 20px;
+  border-radius: 14px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+/* Result title */
+.result h2 {
+  margin-bottom: 14px;
+  color: #111827;
+}
+
+/* Section titles inside result */
+.result h3 {
+  margin-top: 18px;
+  margin-bottom: 10px;
+  color: #1f2937;
+}
+
+/* Verdict text (risk level) */
+#verdict {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* List of detected indicators */
+#indicatorsList {
+  padding-left: 20px;
+  color: #374151;
+}
+
+/* Each list item spacing */
+#indicatorsList li {
+  margin-bottom: 8px;
+}
+
+/* Used to hide the result before analysis */
+.hidden {
+  display: none;
+}
+
+/* Green text for safe result */
+.safe {
+  color: #059669;
+}
+
+/* Red text for dangerous result */
+.danger {
+  color: #dc2626;
+}
