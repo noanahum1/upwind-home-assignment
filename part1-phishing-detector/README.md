@@ -32,7 +32,7 @@ The application follows a structured pipeline to analyze the email and assign a 
 
 ---
 
-## 🧠 Key Variables & Data Structures
+## Key Variables & Data Structures
 
 * **`score` (Integer):** The core metric of the application. Starts at 0. 
   * `Urgency/Threats`: +2 or +3 points.
@@ -49,7 +49,7 @@ The application follows a structured pipeline to analyze the email and assign a 
 
 ---
 
-## 🧪 Test Cases
+## Test Cases
 You can copy and paste the following examples into the live demo to observe the system's behavior:
 
 ### Test 1: The "High Risk" Spoofing Attack
@@ -59,7 +59,7 @@ You can copy and paste the following examples into the live demo to observe the 
 * **Expected Result:** **High Risk (Red)**
   * *Why:* The system will catch the spoofed `g00gle.com` domain, identify the urgent language, detect the request for a "password", and flag the IP-based URL.
 
-### Test 2: The "Medium Risk" Evasion (Leetspeak) Attempt
+### Test 2: The "Medium Risk" Attempt
 * **Sender:** `admin@unknown-server.com`
 * **Subject:** `Update your b1lling inf0rmation`
 * **Body:** `We need your c.r.e.d.i.t c.a.r.d details to process the payment.`
