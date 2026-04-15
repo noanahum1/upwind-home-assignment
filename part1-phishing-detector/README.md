@@ -72,3 +72,126 @@ You can copy and paste the following examples into the live demo to observe the 
 * **Body:** `Congratulations! You have won a free gift. Don't miss out on this deal.`
 * **Expected Result:** **Safe / Promotional (Green)**
   * *Why:* The script will identify the promotional words, but because the sender domain is legitimate (`ksp.co.il`), there are no suspicious links, and no sensitive data is requested, it classifies it as benign promotional material rather than a threat.
+
+  ---
+
+  ##  Function Reference & Architecture
+
+The application is built using a modular, functional approach. Functions are strictly divided into distinct responsibilities: orchestration, text processing, mathematical evaluation (Levenshtein) and specific threat detection. 
+
+Below is a map of the script's functions, their inputs/outputs and their dependencies.
+
+### 1. Main Orchestration
+* **`analyzeEmail()`**
+  * **Description:** The core entry point triggered by the "Analyze" button. It gathers user input from the DOM, orchestrates the analysis pipeline by calling various helper functions, calculates the final score, and updates the UI.
+  * **Takes:** None (Reads directly from DOM elements).
+  * **Returns:** None (Updates the DOM).
+  * **Calls:** `normalizeText`, `getNormalizedWords`, `detectPhraseCategory`, `addCategoryIndicators`, `checkLinks`, `checkSenderEmail`, `addListToIndicators`, `renderVerdict`.
+
+* **`renderVerdict(verdictText, indicatorsList, indicators, score, ...)`**
+  * **Description:** Evaluates the final accumulated score and category findings to determine the final risk level (Safe, Low, Medium, High). It handles special cases (e.g., purely promotional emails) and renders the results to the screen.
+  * **Takes:** DOM objects, Array of indicator strings, Integer (`score`), and Arrays of found matches per category.
+  * **Returns:** None (Modifies the DOM).
+  * **Calls:** Native DOM methods only.
+
+### 2. Text Normalization & Processing
+* **`normalizeText(text)`**
+  * **Description:** Cleans a full sentence, removes invalid punctuation, and reconstructs it using normalized words.
+  * **Takes:** String (`text`).
+  * **Returns:** String (The fully normalized sentence).
+  * **Calls:** `normalizeWord`.
+
+* **`getNormalizedWords(text)`**
+  * **Description:** Splits a string into an array of individual, cleaned words after normalization.
+  * **Takes:** String (`text`).
+  * **Returns:** Array of Strings.
+  * **Calls:** `normalizeWord`.
+
+* **`normalizeWord(word)`**
+  * **Description:** Translates "leetspeak" (e.g., `@` to `a`, `0` to `o`), removes non-alphanumeric characters, and collapses duplicate consecutive letters to catch evasion attempts.
+  * **Takes:** String (`word`).
+  * **Returns:** String.
+  * **Calls:** None.
+
+### 3. Phrase & Threat Detection
+* **`detectPhraseCategory(normalizedFullText, words, phrases)`**
+  * **Description:** Iterates through a predefined array of threat phrases (e.g., `urgentWords`) and checks if they exist in the email content.
+  * **Takes:** String (`normalizedFullText`), Array of Strings (`words`), Array of Strings (`phrases`).
+  * **Returns:** Array of Strings (The specific phrases that were found).
+  * **Calls:** `isPhraseDetected`.
+
+* **`isPhraseDetected(normalizedFullText, words, phrase)`**
+  * **Description:** Determines how to search for a phrase. If it's a multi-word phrase, it searches the full text. If it's a single word, it delegates to the similarity checker to catch typos.
+  * **Takes:** String (`normalizedFullText`), Array of Strings (`words`), String (`phrase`).
+  * **Returns:** Boolean.
+  * **Calls:** `normalizeText`, `containsSimilarWord`.
+
+* **`containsSimilarWord(words, keyword)`**
+  * **Description:** Iterates through all words in the email to see if any single word closely matches the target keyword.
+  * **Takes:** Array of Strings (`words`), String (`keyword`).
+  * **Returns:** Boolean.
+  * **Calls:** `isSimilar`.
+
+### 4. Fuzzy Matching (Levenshtein Logic)
+* **`isSimilar(word, keyword)`**
+  * **Description:** Evaluates if two words are suspiciously similar. It sets dynamic thresholds (shorter words require exact matches, longer words allow 1-2 character differences).
+  * **Takes:** String (`word`), String (`keyword`).
+  * **Returns:** Boolean.
+  * **Calls:** `levenshteinDistance`.
+
+* **`levenshteinDistance(a, b)`**
+  * **Description:** A mathematical algorithm that calculates the minimum number of single-character edits (insertions, deletions, or substitutions) required to change word `a` into word `b`.
+  * **Takes:** String (`a`), String (`b`).
+  * **Returns:** Integer (The distance score).
+  * **Calls:** None.
+
+### 5. Link (URL) Analysis
+* **`checkLinks(fullText)`**
+  * **Description:** Extracts all URLs from the email body using Regex, then evaluates them for malicious patterns.
+  * **Takes:** String (`fullText`).
+  * **Returns:** Object (`{ score: Integer, messages: Array }`).
+  * **Calls:** `containsIPAddress`, `containsEncodedOrObfuscatedCharacters`.
+
+* **`containsIPAddress(url)`**
+  * **Description:** Checks if a URL relies on a raw IP address rather than a standard domain name.
+  * **Takes:** String (`url`).
+  * **Returns:** Boolean.
+  * **Calls:** None.
+
+* **`containsEncodedOrObfuscatedCharacters(url)`**
+  * **Description:** Looks for suspicious symbols (`%`, `@`, `--`) often used to hide the true destination of a URL.
+  * **Takes:** String (`url`).
+  * **Returns:** Boolean.
+  * **Calls:** None.
+
+### 6. Sender Validation & Spoofing
+* **`checkSenderEmail(senderEmail)`**
+  * **Description:** Validates standard email format, extracts the domain, and cross-references it with a whitelist of legitimate domains to check for spoofing.
+  * **Takes:** String (`senderEmail`).
+  * **Returns:** Object (`{ score: Integer, messages: Array }`).
+  * **Calls:** `extractDomainFromEmail`, `isDomainSpoofed`.
+
+* **`extractDomainFromEmail(email)`**
+  * **Description:** Isolates the domain portion of an email address (everything after the `@`).
+  * **Takes:** String (`email`).
+  * **Returns:** String.
+  * **Calls:** None.
+
+* **`isDomainSpoofed(senderDomain, legitimateDomain)`**
+  * **Description:** Compares the sender's domain against a trusted domain using Levenshtein distance to catch slight misspellings (e.g., `amzon.com` vs `amazon.com`).
+  * **Takes:** String (`senderDomain`), String (`legitimateDomain`).
+  * **Returns:** Boolean.
+  * **Calls:** `normalizeWord`, `levenshteinDistance`.
+
+### 7. Array Utilities
+* **`addCategoryIndicators(indicators, matches, prefix)`**
+  * **Description:** Appends a formatted string (prefix + match) into the main findings array.
+  * **Takes:** Array (`indicators`), Array (`matches`), String (`prefix`).
+  * **Returns:** None (Mutates the `indicators` array directly).
+  * **Calls:** None.
+
+* **`addListToIndicators(indicators, messages)`**
+  * **Description:** Merges a list of message strings into the main indicators array.
+  * **Takes:** Array (`indicators`), Array (`messages`).
+  * **Returns:** None (Mutates the `indicators` array directly).
+  * **Calls:** None.
