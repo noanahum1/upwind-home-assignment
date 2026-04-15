@@ -151,6 +151,7 @@ function renderVerdict(verdictText, indicatorsList, indicators, score, riskyUrge
   }
 }
 
+// The function formats detected phrases into readable messages
 // Adds messages like: Request for sensitive information detected: "password"
 function addCategoryIndicators(indicators, matches, prefix) {
   var i;
@@ -159,7 +160,8 @@ function addCategoryIndicators(indicators, matches, prefix) {
   }
 }
 
-// Adds a whole list of messages into the main indicators array
+// This function is used when we already have fully formatted messages, for example from the links and sender email checks.
+// It simply adds these messages to the main indicators array.
 function addListToIndicators(indicators, messages) {
   var i;
   for (i = 0; i < messages.length; i++) {
@@ -213,7 +215,7 @@ function getNormalizedWords(text) {
   var word;
 
   for (i = 0; i < rawWords.length; i++) {
-    word = normalizeWord(rawWords[i]);
+    word = normalizeWord(rawWords[i]); // Calls the function normalizeWord(word)
     if (word.length > 0) {
       normalizedWords.push(word);
     }
@@ -232,7 +234,7 @@ function normalizeText(text) {
   var word;
 
   for (i = 0; i < words.length; i++) {
-    word = normalizeWord(words[i]);
+    word = normalizeWord(words[i]); // Calls the function normalizeWord(word)
     if (word.length > 0) {
       normalizedWords.push(word);
     }
@@ -323,7 +325,8 @@ function levenshteinDistance(a, b) {
   return matrix[b.length][a.length];
 }
 
-// Finds links and checks whether they look suspicious
+// This function finds links in the email and checks whether they look suspicious
+// Returns an object containing the total score from link analysis and a list of messages for the user
 function checkLinks(fullText) {
   var messages = [];
   var score = 0;
@@ -365,7 +368,11 @@ function containsIPAddress(url) {
   return ipRegex.test(url);
 }
 
-// Checks for common URL tricks
+// This function checks for common URL tricks such as encoding and obfuscation
+// These techniques are often used to hide malicious links, for example:
+// - Using % encoding to hide the real URL (e.g. http://%77%77%77%2Eexample%2Ecom)
+// - Using @ to mislead users about the real domain (e.g. http://fake.com@real.com)
+// - Using unusual patterns like "--" to make the URL look legitimate
 function containsEncodedOrObfuscatedCharacters(url) {
   if (url.indexOf("%") !== -1) {
     return true;
@@ -382,7 +389,10 @@ function containsEncodedOrObfuscatedCharacters(url) {
   return false;
 }
 
-// Checks if sender email format is valid and if the domain looks spoofed
+// This function checks if the sender email format is valid and whether the domain appears spoofed
+// It compares the sender's domain to a list of known legitimate domains using similarity (Levenshtein distance),
+// Adds a score and message if the format is invalid or if the domain looks suspicious (e.g. amaz0n.com)
+// Returns an object containing the score and a list of messages
 function checkSenderEmail(senderEmail) {
   var messages = [];
   var score = 0;
@@ -440,7 +450,7 @@ function checkSenderEmail(senderEmail) {
   };
 }
 
-// Gets only the domain part from an email address
+// This function extracts only the domain part from an email address
 function extractDomainFromEmail(email) {
   var parts = email.split("@");
 
@@ -451,7 +461,7 @@ function extractDomainFromEmail(email) {
   return parts[1];
 }
 
-// Compares sender domain to known legitimate domains
+// This function compares the sender domain to known legitimate domains using similarity checking
 function isDomainSpoofed(senderDomain, legitimateDomain) {
   var cleanedSenderDomain;
   var cleanedLegitimateDomain;
