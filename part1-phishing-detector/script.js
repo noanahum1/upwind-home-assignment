@@ -27,6 +27,10 @@ function analyzeEmail() {
   var normalizedFullText = normalizeText(fullText);
   var words = getNormalizedWords(fullText);
 
+  // Define categories of suspicious phrases
+  // Some phrases can belong to multiple categories, for example "final warning", which indicates both urgency and threat.
+  // In such cases, the system intentionally counts them in both categories to reflect a higher risk.
+
   var urgentWords = [
     "urgent", "immediately", "act now", "verify now", "action required", "click now", "confirm now", "last chance",
     "your account has been compromised", "your account will be closed", "your account has been suspended",
