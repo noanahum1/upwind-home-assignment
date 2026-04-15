@@ -75,7 +75,7 @@ You can copy and paste the following examples into the live demo to observe the 
 
   ---
 
-  ##  Function Reference & Architecture
+##  Function Reference & Architecture
 
 The application is built using a modular, functional approach. Functions are strictly divided into distinct responsibilities: orchestration, text processing, mathematical evaluation (Levenshtein) and specific threat detection. 
 
