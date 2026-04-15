@@ -1,1 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Injection Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>SQL Injection Demo</h1>
+        <p class="subtitle">
+            This application demonstrates a vulnerable login flow versus a secure login flow.
+        </p>
 
+        <div class="info-box">
+            <h3>Demo Credentials</h3>
+            <p><strong>Username:</strong> admin</p>
+            <p><strong>Password:</strong> 1234</p>
+        </div>
+
+        <div class="grid">
+            <div class="card vulnerable-card">
+                <h2>Vulnerable Login</h2>
+                <p>This version builds the SQL query unsafely.</p>
+
+                <form action="/vulnerable-login" method="POST" class="login-form">
+                    <label for="vuln-username">Username</label>
+                    <input type="text" id="vuln-username" name="username" required>
+
+                    <label for="vuln-password">Password</label>
+                    <input type="password" id="vuln-password" name="password" required>
+
+                    <button type="submit" class="btn btn-danger" disabled>
+                        Login (Vulnerable)
+                    </button>
+                </form>
+
+                {% if vulnerable_message %}
+                    <div class="result {{ vulnerable_status }}">
+                        {{ vulnerable_message }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="card secure-card">
+                <h2>Secure Login</h2>
+                <p>This version uses a parameterized query.</p>
+
+                <form action="/secure-login" method="POST" class="login-form">
+                    <label for="secure-username">Username</label>
+                    <input type="text" id="secure-username" name="username" required>
+
+                    <label for="secure-password">Password</label>
+                    <input type="password" id="secure-password" name="password" required>
+
+                    <button type="submit" class="btn btn-primary" disabled>
+                        Login (Secure)
+                    </button>
+                </form>
+
+                {% if secure_message %}
+                    <div class="result {{ secure_status }}">
+                        {{ secure_message }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="note">
+            <h3>How to Test</h3>
+            <p><strong>Normal login:</strong></p>
+            <p>Username: <strong>admin</strong></p>
+            <p>Password: <strong>1234</strong></p>
+
+            <p><strong>SQL injection test (for the vulnerable form):</strong></p>
+            <p>Username: <strong>' OR '1'='1</strong></p>
+            <p>Password: <strong>1234</strong></p>
+
+            <p>
+                Expected result:
+                the vulnerable login should succeed, while the secure login should fail
+                when the same SQL injection input is used.
+            </p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
