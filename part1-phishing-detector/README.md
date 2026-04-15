@@ -16,7 +16,7 @@ In addition, the system also checks for:
 - promotional wording that may look suspicious but is not always phishing
 
 ## How to Run the Project
-<a href="https://noanahum1.github.io/upwind-home-assignment/part1-phishing-detector/" target="_blank">**Click here to run the live application**</a>
+<a href="https://noanahum1.github.io/upwind-home-assignment/part1-phishing-detector/" >**Click here to run the live application**</a>
 
 ---
 
