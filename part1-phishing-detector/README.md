@@ -15,7 +15,7 @@ In addition, the system also checks for:
 - threatening language
 - promotional wording that may look suspicious but is not always phishing
 
-## Live Demo
+## How to Run the Project
 <a href="https://noanahum1.github.io/upwind-home-assignment/part1-phishing-detector/" target="_blank">**Click here to run the live application**</a>
 
 ---
