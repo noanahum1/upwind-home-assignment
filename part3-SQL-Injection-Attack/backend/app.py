@@ -54,8 +54,8 @@ def vulnerable_login():
     print("VULNERABLE QUERY:", query)
 
     try:
-        cursor.execute(query)
-        user = cursor.fetchone()
+        cursor.execute(query) # Execute the full SQL query (including raw user input)
+        user = cursor.fetchone() # Get the first matching user from the database
 
         if user:
             message = "Vulnerable login succeeded."
@@ -91,14 +91,14 @@ def secure_login():
     connection = connect_db()
     cursor = connection.cursor()
 
-    # Secure query: placeholders are used instead of direct string concatenation
+    # Secure query: uses placeholders instead of inserting user input directly
     query = "SELECT * FROM users WHERE username = ? AND password = ?"
     print("SECURE QUERY:", query)
     print("PARAMETERS:", username, password)
 
     try:
-        cursor.execute(query, (username, password))
-        user = cursor.fetchone()
+        cursor.execute(query, (username, password)) # Execute query and bind user input to placeholders 
+        user = cursor.fetchone() # Get the first matching user from the database
 
         if user:
             message = "Secure login succeeded."
