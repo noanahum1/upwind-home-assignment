@@ -88,8 +88,8 @@ def secure_login():
         session["secure_status"] = "error"
         return redirect(url_for("index"))
 
-    connection = connect_db()
-    cursor = connection.cursor()
+    connection = connect_db() # Establish a connection to the database
+    cursor = connection.cursor() # Create a cursor object to execute SQL commands
 
     # Secure query: uses placeholders instead of inserting user input directly
     query = "SELECT * FROM users WHERE username = ? AND password = ?"
